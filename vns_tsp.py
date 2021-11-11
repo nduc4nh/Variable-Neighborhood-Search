@@ -6,6 +6,7 @@ from vns.vns_framework import GVNS
 
 from neighbor_opt.permutation import insert_one, swap_move, two_opt
 import numpy as np
+import matplotlib.pyplot as plt
 
 nodes = {}
 
@@ -41,7 +42,18 @@ Ns = [insert_one, swap_move, two_opt]
 kmax = len(Ns)
 lmax = kmax
 x = init_x()
-stop_condition = NonImprovemnt(1000)
+stop_condition = NonImprovemnt(10000)
+
+def plotting(x):
+    print(x)
+    global nodes
+    x_ = [nodes[i][0] for i in x]
+    y_ = [nodes[i][1] for i in x]
+    plt.cla()
+    plt.plot(x_,y_,)
+    plt.scatter(x_,y_)
+    plt.pause(0.02)
+    
 
 if __name__ == "__main__":
     re = GVNS(x,Ns, kmax, lmax,
@@ -49,6 +61,7 @@ if __name__ == "__main__":
         change_step=sequential_change_step,
         improvement=BVND,
         shaking=shake,
-        stop_condition=stop_condition)
+        stop_condition=stop_condition,
+        callback=plotting)
 
     print(re)
