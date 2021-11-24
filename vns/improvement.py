@@ -1,4 +1,5 @@
-from .change_step import sequential_change_step
+from vns.util_funcs import get_all_neighbors
+from .change_step import sequential_change_step_,sequential_change_step
 
 def BVND(x,lmax,N, fitness):
     x_ = x
@@ -13,14 +14,15 @@ def BVND(x,lmax,N, fitness):
             return x1
 
 
-def BVND_non_random(x,lmax,neighbors,fitness):
+def BVND_non_random(x,lmax,Ns,fitness):
     x_ = x
     while True:
         l = 0
         x1 = x_
         while l != lmax:
-            x2 = min([(ele, fitness(ele)) for ele in neighbors[l]], key=lambda x:x[1])[0]
-            x_,l = sequential_change_step(x_,x2,l, fitness)
+            x2 = get_all_neighbors(x_,Ns, fitness)[l][0]
+            x_,l = sequential_change_step_(x_,x2,l)
+            print(l)
         #print(get_travel_distance(x1),get_travel_distance(x_))
-        if fitness(x1)  <= fitness(x_):
+        if x1[1] <= x_[1]:
             return x1

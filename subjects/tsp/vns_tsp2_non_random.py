@@ -2,8 +2,8 @@ import os,sys
 
 sys.path.append(os.path.abspath("./"))
 
-from vns.shake import shake
-from vns.change_step import sequential_change_step
+from vns.shake import shake_
+from vns.change_step import sequential_change_step_
 from vns.improvement import BVND_non_random
 from vns.stop_condition import NonImprovemnt
 from vns.vns_framework import GVNS_2
@@ -40,7 +40,9 @@ def get_travel_distance(permutation):
 
 def init_x():
     global n
-    return np.random.permutation([i for i in range(1, n+1)])
+    x = np.random.permutation([i for i in range(1, n+1)])
+    f = get_travel_distance(x)
+    return x,f 
 
 
 Ns = [insert_one_whole, swap_move_whole, two_opt_whole]
@@ -63,9 +65,9 @@ def plotting(x):
 if __name__ == "__main__":
     re = GVNS_2(x,Ns, kmax, lmax,
         evaluation=get_travel_distance,
-        change_step=sequential_change_step,
+        change_step=sequential_change_step_,
         improvement=BVND_non_random,
-        shaking=shake,
+        shaking=shake_,
         stop_condition=stop_condition,
         callback=plotting)
 

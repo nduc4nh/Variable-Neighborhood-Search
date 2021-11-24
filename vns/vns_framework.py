@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import os,sys
-sys.path.append(os.path.abspath("./"))
-from util_funcs import get_all_neighbors
+from vns.util_funcs import get_all_neighbors
 
 #GVNS with random procedure
 def GVNS(x,Ns, kmax, lmax,
@@ -56,12 +54,14 @@ def GVNS_2(x,Ns, kmax, lmax,
         k = 1
         while k != kmax:
         #print(k)    
-            neighbors = get_all_neighbors(x,Ns)
-            x1 = shaking(x,k,neighbors)
+            neighbors = get_all_neighbors(x,Ns,evaluation)
+            x1 = shaking(k,neighbors)
             x2 = improvement(x1,lmax,Ns,evaluation)
-            x,k = change_step(x,x2,k,evaluation)
-        s = evaluation(x)
+            x,k = change_step(x,x2,k)
+            print(evaluation(x[0]), k )
+        s = evaluation(x[0])
         re = x
+        print("-----")
         
         if s < best:
             history.append((x,s))

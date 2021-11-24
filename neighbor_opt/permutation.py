@@ -25,7 +25,7 @@ def insert_one(x):
     if j == 0: re = [tmp] + tmp1
     else: re = tmp1[:j] + [tmp] + tmp1[j:]
     return re
-    
+
 def swap_move(x):
     x = list(x)
     n = len(x)
@@ -53,7 +53,6 @@ def two_opt_whole(x):
 def insert_one_whole(x):
     x = list(x)
     n = len(x)
-    print(x)
     neighbors = []
     for i in range(n):
         for j in range(n):
