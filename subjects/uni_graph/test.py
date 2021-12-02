@@ -1,8 +1,8 @@
 import numpy as np
 import os,sys
 sys.path.append(os.path.abspath("./"))
-from evaluation_func import contains,find_adj,get_next
-
+from evaluation_func import find_adj,get_next
+from graph_io import contains
 if __name__=="__main__":
 
     #generate random uni-derection graph with colors
@@ -18,7 +18,6 @@ if __name__=="__main__":
             weights = [np.random.randint(1,20) for i in range(len(adjs))]
             full_adjs = list(zip(adjs,weights))
             d_adj[(color, ele).__str__()] = full_adjs
-
 
     #construct matrix presentation for Graph
     for color in range(colors):

@@ -1,18 +1,13 @@
-def contains(x,li):
-    for ele in li:
-        if ele[0] == x:
-            return ele
-    return False
-
-        
+#given indices of vertices n, distance matrix d--> find adjencent vertices of x
 def find_adj(n,d,x,color):
     re = []
-    for i in range(len(n)):
+    for i in range(1,len(n)+1):
         weight = d[color][x][i]
         if weight != 0 and weight != float("inf"):
             re.append((i, weight))
     return re 
 
+#given indices of vertices n, distance matrix d--> find shorstest distance from start to vertices having color "c" in-edge
 def get_next(n,d,cur_v,cur_dist,c):
     queue = []
     dist = {}
@@ -29,7 +24,7 @@ def get_next(n,d,cur_v,cur_dist,c):
         x,s = queue.pop(0)
         adj = find_adj(n,d,x,c)
         for ele in adj:
-            print(adj)
+            #print(adj)
             if s + ele[1] < dist[ele[0]]:
                 dist[ele[0]] = s + ele[1]
                 queue.append((ele[0], dist[ele[0]]))

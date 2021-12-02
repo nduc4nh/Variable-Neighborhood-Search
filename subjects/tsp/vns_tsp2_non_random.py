@@ -1,21 +1,21 @@
 import os,sys
 
-sys.path.append(os.path.abspath("./"))
+sys.path.append(os.path.abspath("../../"))
 
-from vns.shake import shake_
+from vns.shake import shake
 from vns.change_step import sequential_change_step_
 from vns.improvement import BVND_non_random
 from vns.stop_condition import NonImprovemnt
 from vns.vns_framework import GVNS_2
 
-from neighbor_opt.permutation import insert_one_whole, swap_move_whole, two_opt_whole
+from neighbor_opt.permutation import insert_one, insert_one_whole, swap_move, swap_move_whole, two_opt, two_opt_whole
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 nodes = {}
 
-with open("./data/tspdata.txt", "r") as f:
+with open("../../data/tspdata.txt", "r") as f:
     for line in f:
         tmp = line.strip().split()
         if len(tmp) != 3:
@@ -46,6 +46,7 @@ def init_x():
 
 
 Ns = [insert_one_whole, swap_move_whole, two_opt_whole]
+Ns_opt = [insert_one, swap_move, two_opt]
 kmax = len(Ns)
 lmax = kmax
 x = init_x()
@@ -63,11 +64,11 @@ def plotting(x):
     
 
 if __name__ == "__main__":
-    re = GVNS_2(x,Ns, kmax, lmax,
+    re = GVNS_2(x,Ns, Ns_opt, kmax, lmax,
         evaluation=get_travel_distance,
         change_step=sequential_change_step_,
         improvement=BVND_non_random,
-        shaking=shake_,
+        shaking=shake,
         stop_condition=stop_condition,
         callback=plotting)
 

@@ -37,23 +37,13 @@ def swap_move(x):
     return re
 
 
-#Whole
-def two_opt_whole(x):
-    x = list(x)
-    n = len(x)
-    
-    neighbors = []
-    for i in range(n-1):
-        for j in range(i+1,n):
-            x_ = x[:]
-            neighbors.append(x_[:i] + x_[i:j+1][::-1] + x_[j+1:])
-        
-    return neighbors
-
-def insert_one_whole(x):
+#Whole neighbors with search strategy
+def insert_one_whole(x, f_x, fitness, search_strat = "first"):
     x = list(x)
     n = len(x)
     neighbors = []
+    permute_candidate = x
+    best = f_x
     for i in range(n):
         for j in range(n):
             if j == i - 1 or i == j:
@@ -64,20 +54,53 @@ def insert_one_whole(x):
             tmp2 = x_[i+1:]
         
             tmp1 = tmp1 + tmp2
-            if x[i] == 0:
-                print(tmp1,tmp,j,[tmp] + tmp1)
-            if j == 0: neighbors.append([tmp] + tmp1)
-            else: neighbors.append(tmp1[:j] + [tmp] + tmp1[j:])
+            permute_candidate 
+            if j == 0: candidate_tmp = [tmp] + tmp1
+            else: candidate_tmp = tmp1[:j] + [tmp] + tmp1[j:]
+            candidate_tmp_f = fitness(candidate_tmp) 
+            if  candidate_tmp_f < best:
+                permute_candidate = candidate_tmp
+                best = candidate_tmp_f    
+                if search_strat == 'first':
+                    return permute_candidate,best
 
-    return neighbors
+    return permute_candidate,best
 
-def swap_move_whole(x):
+def swap_move_whole(x, f_x, fitness, search_strat = "first"):
     x = list(x)
     n = len(x)
-    neighbors = []
+    best = f_x
+    permutation_candidate = x
     for i in range(n-1):
         for j in range(i+1,n):
             x_ = x[:]
             x_[i],x_[j] = x_[j],x_[i]
-            neighbors.append(x_)
-    return neighbors
+            f_x_ = fitness(x_)
+            if f_x_ < best:
+                best = f_x_
+                permutation_candidate = x_
+                if search_strat == "first":
+                    return permutation_candidate, best
+    return permutation_candidate, best
+
+
+def two_opt_whole(x, f_x, fitness, search_strat = "first"):
+    """
+    x: permutation
+    search_strat = ['first', 'best] default: 'first
+    """
+    x = list(x)
+    n = len(x)
+    best = f_x
+    permute_candidate = x
+    for i in range(n-1):
+        for j in range(i+1,n):
+            tmp = x[:i] + x[i:j+1][::-1] + x[j+1:]
+            tmp_f = fitness(tmp) 
+            if tmp_f < best:
+                permute_candidate = tmp
+                best = tmp_f
+                if search_strat == 'first':
+                    return permute_candidate, best
+        
+    return permute_candidate, best

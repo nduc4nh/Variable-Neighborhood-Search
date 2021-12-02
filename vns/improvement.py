@@ -14,15 +14,17 @@ def BVND(x,lmax,N, fitness):
             return x1
 
 
-def BVND_non_random(x,lmax,Ns,fitness):
-    x_ = x
+def BVND_non_random(x,lmax,Ns,fitness, search_strat):
+    x_ = x[:]
     while True:
         l = 0
         x1 = x_
+        
         while l != lmax:
-            x2 = get_all_neighbors(x_,Ns, fitness)[l][0]
+            x2 = Ns[l](x_[0],x_[1], fitness, search_strat)
             x_,l = sequential_change_step_(x_,x2,l)
-            print(l)
+            print(x_[1])
+            
         #print(get_travel_distance(x1),get_travel_distance(x_))
         if x1[1] <= x_[1]:
             return x1
