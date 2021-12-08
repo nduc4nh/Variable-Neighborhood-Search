@@ -21,6 +21,14 @@ if __name__ == '__main__':
     start = meta["start"]
     end = meta["end"]
     
+    path = None
+    #get path
+    def print_best(fitness):
+        global path
+        def func(x):
+            return fitness(x)
+        return func
+
     #Defining params for GVNS
     Ns = [insert_one_whole, swap_move_whole, two_opt_whole]
     Ns_opt = [insert_one, swap_move, two_opt]
@@ -29,10 +37,12 @@ if __name__ == '__main__':
     fitness_func = fitness(n, d, start, end)
     x = init_vns(colors, fitness_func)
     stop = NonImprovemnt(int(stop))
+    
     sol = GVNS_2(x, Ns, Ns_opt, kmax, lmax, evaluation=fitness_func,
            shaking=shake,
            change_step=sequential_change_step_,
            improvement=BVND_non_random,
-           stop_condition=stop)
+           stop_condition=stop,
+           callback=print_best(fitness(n,d,start,end,mem=True)))
 
     print(sol)

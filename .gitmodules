@@ -1,0 +1,3 @@
+[submodule "andevola"]
+	path = andevola
+	url = git@github.com:nduc4nh/andevola.git

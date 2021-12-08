@@ -87,6 +87,7 @@ def swap_move_whole(x, f_x, fitness, search_strat = "first"):
 def two_opt_whole(x, f_x, fitness, search_strat = "first"):
     """
     x: permutation
+    f_x: fitness of permutation
     search_strat = ['first', 'best] default: 'first
     """
     x = list(x)

@@ -1,5 +1,9 @@
 #given indices of vertices n, distance matrix d--> find adjencent vertices of x
 def find_adj(n,d,x,color):
+    """
+    input: v
+    output: u,w
+    """
     re = []
     for i in range(1,len(n)+1):
         weight = d[color][x][i]
@@ -8,29 +12,37 @@ def find_adj(n,d,x,color):
     return re 
 
 #given indices of vertices n, distance matrix d--> find shorstest distance from start to vertices having color "c" in-edge
-def get_next(n,d,cur_v,cur_dist,c):
+def get_next(n,d,cur_v,cur_dist,c,path = None):
     queue = []
     dist = {}
     traversed = []
-    
     for ele in n:
         dist[ele] = float("inf")
-    for ele in cur_v:
-        dist[ele] = cur_dist[ele]
-        queue.append([ele, dist[ele]])
+
+    for v in cur_v:
+        dist[v] = cur_dist[v]
+        if path:
+            path[v] = path[v]
+        queue.append([v, dist[v]])
+    if path: print(path)
     queue.sort(key = lambda x: x[1])
-    
     while queue:
-        x,s = queue.pop(0)
-        adj = find_adj(n,d,x,c)
+        v,s = queue.pop(0)
+        adj = find_adj(n,d,v,c)
         for ele in adj:
             #print(adj)
-            if s + ele[1] < dist[ele[0]]:
-                dist[ele[0]] = s + ele[1]
-                queue.append((ele[0], dist[ele[0]]))
+            u,w = ele
+            if s + w < dist[u]:
+                dist[u] = s + w
+                queue.append((u, dist[u]))
                 queue.sort(key = lambda x:x[1])
+                if path:    
+                    tmp = path[v][:]
+                    tmp.append((u,c))
+                    path[u] = tmp  
                 if ele[0] not in traversed:
-                    traversed.append(ele[0])
+                    traversed.append(u)
+    if path: return dist,traversed,path
     return dist,traversed
             
             

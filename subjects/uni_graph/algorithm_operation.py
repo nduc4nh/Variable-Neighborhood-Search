@@ -26,22 +26,28 @@ def init_vns(colors,defined_fitness):
         if stop == int(np.math.factorial(colors)*2/3):
             return x,f
             
-def fitness(n,d,start,end):
+def fitness(n,d,start,end,mem = False):
+    
     def func(individual_x):
-        cur_v = [start]
+        cur_v = []
         cur_dist = {start:0}
+        path = {start:[]}
         for ele in find_adj(n,d,start,individual_x[0]):
             cur_v.append(ele[0])
             cur_dist[ele[0]] = ele[1]
+            if mem:
+                path[ele[0]] = [(start,individual_x[0])]
         l = len(individual_x)    
         for i,color in enumerate(individual_x):
             if i != l - 1:
                 if end in cur_dist:
                     cur_dist[end] = float("inf")
                     cur_v.remove(end)
-
-            cur_dist,cur_v = get_next(n,d,cur_v,cur_dist,color)
-            
+            if mem:
+                cur_dist,cur_v,path = get_next(n,d,cur_v,cur_dist,color,path)
+            else:
+                cur_dist,cur_v = get_next(n,d,cur_v,cur_dist,color)
+        
         return cur_dist[end]
     return func
 
