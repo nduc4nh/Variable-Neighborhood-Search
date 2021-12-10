@@ -1,24 +1,38 @@
 import numpy as np
-from evaluation_func import find_adj,get_next
+from utils import find_adj,get_next,get_available_colors
 
 #init individual with a given number of population
-def init_individual(size,colors):
-    n = np.math.factorial(colors)
-    if size > n:
+def init_individual(n,d,start,end,size,colors):
+    num = np.math.factorial(colors)
+    if size > num:
         size = int(2*n/3)
     re = []
+
+    firsts = get_available_colors(n,d,start,colors)
+    ends = get_available_colors(n,d,end,colors)
+
     for i in range(size):
         tmp = list(np.random.permutation(range(1,colors+1)))
         print(i)
-        if tmp not in re:
+        if tmp not in re and tmp[0] in firsts and tmp[-1] in ends:
             re.append(tmp)
+    
+    print("init done!")
     return re
 
+def init_func(n,d,start,end,colors, fitness):
+    def func(size):
+        x = init_individual(n,d,start,end,size,colors)
+        re = [[ele,fitness(ele)] for ele in x] 
+        return re
+    return func
+
+
 #init 1 individual for vns algorithm
-def init_vns(colors,defined_fitness):
+def init_vns(n,d,start,end,colors,defined_fitness):
     stop = 0
     while True:
-        x = init_individual(1,colors)[0]
+        x = init_individual(n,d,start,end,1,colors)[0]
         f = defined_fitness(x)
         if f != float("inf"):
             return x,f

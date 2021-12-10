@@ -2,7 +2,7 @@
 def find_adj(n,d,x,color):
     """
     input: v
-    output: u,w
+    output: [u,w]
     """
     re = []
     for i in range(1,len(n)+1):
@@ -24,7 +24,7 @@ def get_next(n,d,cur_v,cur_dist,c,path = None):
         if path:
             path[v] = path[v]
         queue.append([v, dist[v]])
-    if path: print(path)
+    
     queue.sort(key = lambda x: x[1])
     while queue:
         v,s = queue.pop(0)
@@ -46,4 +46,9 @@ def get_next(n,d,cur_v,cur_dist,c,path = None):
     return dist,traversed
             
             
-
+def get_available_colors(n,d,v,colors):
+    available_colors = []
+    for color in range(1,colors+1):
+        adjs = find_adj(n,d,v,color)
+        if len(adjs) > 0: available_colors.append(color)
+    return available_colors

@@ -35,7 +35,7 @@ if __name__ == '__main__':
     kmax = len(Ns)
     lmax = kmax
     fitness_func = fitness(n, d, start, end)
-    x = init_vns(colors, fitness_func)
+    x = init_vns(n,d,start,end,colors, fitness_func)
     stop = NonImprovemnt(int(stop))
     
     sol = GVNS_2(x, Ns, Ns_opt, kmax, lmax, evaluation=fitness_func,
