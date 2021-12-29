@@ -1,7 +1,7 @@
 import numpy as np
 import os,sys
 sys.path.append(os.path.abspath("./"))
-from evaluation_func import find_adj,get_next
+from utils import find_adj,get_next
 from graph_io import contains
 if __name__=="__main__":
 

@@ -48,17 +48,18 @@ def GVNS_2(x,Ns, Ns_opt, kmax, lmax,
          search_strat = "first",
          history=None,
          callback=None):
-
+    #print("!")
     best = float("inf")
     re = None
     history = []
+    stop_condition.start_over()
     while not stop_condition.is_met():
         k = 1
         while k != kmax:
-        #print(k)    
+            #print(k)    
             shaked_data = shaking(x[0],k,Ns_opt)
             x1 = [shaked_data, evaluation(shaked_data)]
-            x2 = improvement(x1,lmax,Ns,evaluation,search_strat)
+            x2 = improvement(x1)
             x,k = change_step(x,x2,k)
             print(evaluation(x[0]), k)
         s = evaluation(x[0])

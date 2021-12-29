@@ -29,6 +29,8 @@ def get_next(n,d,cur_v,cur_dist,c,path = None):
     while queue:
         v,s = queue.pop(0)
         adj = find_adj(n,d,v,c)
+        
+        #print(v,adj)
         for ele in adj:
             #print(adj)
             u,w = ele

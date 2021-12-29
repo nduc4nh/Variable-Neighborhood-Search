@@ -11,3 +11,4 @@ class NonImprovemnt:
     
     def update(self):
         self.count += 1
+    

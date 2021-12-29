@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.algorithms.shortest_paths import weighted
 from graph_io import read_graph
-from evaluation_func import find_adj
+from subjects.uni_graph.utils import find_adj
 
 meta, data, d = read_graph("/home/nducanh/Desktop/Variable-Neighborhood-Search/data/idpc_data_10x10x1000.text")
 n = [i for i in range(1,meta["num"] + 1)]

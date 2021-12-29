@@ -14,14 +14,13 @@ def BVND(x,lmax,N, fitness):
             return x1
 
 
-def BVND_non_random(x,lmax,Ns,fitness, search_strat):
+def BVND_non_random(x,lmax,Ns):
     x_ = x[:]
     while True:
         l = 0
-        x1 = x_
-        
+        x1 = x_ 
         while l != lmax:
-            x2 = Ns[l](x_[0],x_[1], fitness, search_strat)
+            x2 = Ns[l](x)
             x_,l = sequential_change_step_(x_,x2,l)
             print(x_[1])
             
