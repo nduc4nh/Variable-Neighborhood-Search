@@ -14,13 +14,22 @@ from graph_io import construct_possible_matrix, read_graph
 import numpy as np
 from copy import deepcopy
 from subjects.uni_graph.utils import find_adj, get_available_colors
-
+import time
 
 
 if __name__ == "__main__":
     stop = sys.argv[1]
     seed = sys.argv[2]
     exp_data = sys.argv[3]
+    dest_path = None
+    try:
+        export_path = sys.argv[4]
+        dest_path = os.path.join(export_path, exp_data)[:-5]        
+        if not os.path.exists(dest_path):
+            os.mkdir(dest_path)
+    except:
+        pass
+
     np.random.seed(int(seed))
     meta, data, d = read_graph(
         '/home/nducanh/Desktop/Variable-Neighborhood-Search/data/' + exp_data)
@@ -30,6 +39,8 @@ if __name__ == "__main__":
     end = meta["end"]
     for color in range(1, colors + 1):
         print(d[color][start][end])
+    
+
 
     possible_matrix = construct_possible_matrix(meta, data)
     path = None
@@ -111,8 +122,27 @@ if __name__ == "__main__":
             mode="min",
             select_type="MIXING"
             )
-
+    t1 = time.perf_counter()
     sol = ga.act()
-    with open("./result/gavns" + exp_data + ".txt", "a+") as f:
-        f.write("seed: {} - result: {} \n".format(seed, sol.__str__()))
-    print(sol)
+    t2 = time.perf_counter()
+    exec_time = int(t2 - t1)
+    h = exec_time//3600
+    m = (exec_time - h*3600)//60
+    s = (exec_time - h*3600 - m*60)
+    readable_time = "{:02d}:{:02d}:{:02d}".format(h,m,s)
+    output_name = exp_data + "_seed_{}.opt".format(seed)
+    
+
+
+    # with open("./result/gavns" + exp_data + ".txt", "a+") as f:
+    #     f.write("seed: {} - result: {} \n".format(seed, sol.__str__()))
+    # print(sol)
+
+    with open(os.path.join(dest_path,output_name), "w+") as f:
+        f.writelines([
+            "Filename: {}".format(exp_data),
+            "Seed: {}".format(seed),
+            "Fitness: {}".format(sol[1]),
+            "Time: {}".format(readable_time)
+            ])
+    
