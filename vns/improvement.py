@@ -22,8 +22,6 @@ def BVND_non_random(x,lmax,Ns):
         while l != lmax:
             x2 = Ns[l](x)
             x_,l = sequential_change_step_(x_,x2,l)
-            print(x_[1])
-            
         #print(get_travel_distance(x1),get_travel_distance(x_))
         if x1[1] <= x_[1]:
             return x1

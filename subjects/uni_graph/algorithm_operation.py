@@ -11,7 +11,7 @@ from graph_io import construct_possible_matrix
 from copy import deepcopy
 from andevola.operation.permutation.mutation import swap_mutation
 from andevola.operation.permutation.crossover import ox
-from neighbor_opt.permutation import swap_move_whole, two_opt_whole
+from neighbor_opt.permutation import move_up_whole, remove_insert_whole, swap_move_whole, two_opt_whole
 from vns.improvement import BVND_non_random
 #init individual with a given number of population
 def init_individual(n,d,possible_matrix,start,end,size,colors):
@@ -129,7 +129,7 @@ def two_opt_neighbor_wrapper(fitness,fitness_for_neigh, valid):
         index = permute.index(stop)
         candidate = permute[:index+1]
         rest = permute[index+1:]
-        print(candidate)
+
         last_f = f
         while improve:
             last_f = f
@@ -137,6 +137,7 @@ def two_opt_neighbor_wrapper(fitness,fitness_for_neigh, valid):
             if f >= last_f:
                 break
         tmp = [candidate,candidate[-1]]
+        
         f = fitness(tmp)
         candidate.extend(rest)
         neighbor = [[candidate, candidate[1]], f]
@@ -159,13 +160,65 @@ def swap_move_neighbor_wrapper(fitness,fitness_for_neigh, valid):
             candidate,f = swap_move_whole(candidate, f,fitness_for_neigh,valid=valid)
             if f >= last_f:
                 break
+        
         tmp = [candidate,candidate[-1]]
+        
         f = fitness(tmp)
         candidate.extend(rest)
         neighbor = [[candidate, candidate[1]], f]
         return neighbor
     
     return func
+
+def move_up_neighbor_wrapper(fitness,fitness_for_neigh, valid):
+    improve = True
+
+    def func(x): #standard input
+        x_and_mark,f = x
+        permute, stop = x_and_mark 
+        index = permute.index(stop)
+        candidate = permute[:index+1]
+        rest = permute[index+1:]
+        last_f = f
+        while improve:
+            last_f = f
+            candidate,f = move_up_whole(candidate, f,fitness_for_neigh,valid=valid)
+            if f >= last_f:
+                break
+        tmp = [candidate,candidate[-1]]
+        
+        f = fitness(tmp)
+        candidate.extend(rest)
+        neighbor = [[candidate, candidate[1]], f]
+        return neighbor
+    
+    return func
+
+def remove_insert_neighbor_wrapper(fitness,fitness_for_neigh, valid):
+    improve = True
+
+    def func(x): #standard input
+        x_and_mark,f = x
+        permute, stop = x_and_mark 
+        index = permute.index(stop)
+        candidate = permute[:index+1]
+        rest = permute[index+1:]
+        last_f = f
+        while improve:
+            last_f = f
+            candidate,f = remove_insert_whole(candidate, f,fitness_for_neigh,valid=valid)
+            if f >= last_f:
+                break
+        tmp = [candidate,candidate[-1]]
+        
+        f = fitness(tmp)
+        candidate.extend(rest)
+        neighbor = [[candidate, candidate[1]], f]
+        return neighbor
+    
+    return func
+
+
 
 def add_move_neighbor_wrapper(fitness,fitness_for_neigh, valid):
     def find_pos(inserted_value, candidate,rest):
@@ -174,9 +227,10 @@ def add_move_neighbor_wrapper(fitness,fitness_for_neigh, valid):
         best = float("inf")
         
         j = rest.index(inserted_value)
+        
         rest.pop(j)
         l_rest = len(rest)
-        
+    
       
         for i in range(l + 1):
             candidate.insert(i,inserted_value)
@@ -192,8 +246,11 @@ def add_move_neighbor_wrapper(fitness,fitness_for_neigh, valid):
             if f_ < best:
                 best = f_
                 index = i
-            candidate = candidate[:-l_rest]
-            
+            if l_rest == 0:
+                pass
+            else:
+                candidate = candidate[:-l_rest]
+
             if i == l:
                 candidate = candidate[:-1]
             else:
@@ -204,7 +261,7 @@ def add_move_neighbor_wrapper(fitness,fitness_for_neigh, valid):
         tmp = [candidate,candidate[-1]]
         f = fitness(tmp)
         
-        neighbor = [[candidate, candidate[1]], f]
+        neighbor = [[candidate, candidate[-1]], f]
         return neighbor
 
     def func(x): #standard input
@@ -221,6 +278,8 @@ def add_move_neighbor_wrapper(fitness,fitness_for_neigh, valid):
             rest = permute[index+1:]
             
             for i,ele in enumerate(rest):
+                if not rest:
+                    continue
                 neighbor_tmp = find_pos(ele, candidate[:], rest[:])
                 if neighbor_tmp[1] < last_f:
                     last_f = f

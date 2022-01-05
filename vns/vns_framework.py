@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from vns.util_funcs import get_all_neighbors
 
-np.random.seed(0)
 #GVNS with random procedure
 def GVNS(x,Ns, kmax, lmax,
          evaluation=None, 
@@ -56,19 +55,22 @@ def GVNS_2(x,Ns, Ns_opt, kmax, lmax,
     while not stop_condition.is_met():
         k = 1
         while k != kmax:
-            #print(k)    
+            print(k)
+            print(x, evaluation(x[0]))    
             shaked_data = shaking(x[0],k,Ns_opt)
             x1 = [shaked_data, evaluation(shaked_data)]
+            print("shaked",x1)
             x2 = improvement(x1)
+            print("improve",x2)
             x,k = change_step(x,x2,k)
-            print(evaluation(x[0]), k)
         s = evaluation(x[0])
-        re = x
+        
         print("-----")
         print(stop_condition.count, stop_condition.stop)
         if s < best:
             history.append((x,s))
-            print(s)
+            re = x
+            print("new best:", s, re, evaluation(re[0]))
             if callback:
                 callback(x[0])
             stop_condition.start_over()

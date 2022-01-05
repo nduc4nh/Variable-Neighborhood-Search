@@ -50,6 +50,27 @@ def swap_move(x):
     re[i],re[j] = re[j],re[i]
     return re
 
+def move_up(x):
+    x = list(x)
+    n = len(x)
+    if n <= 1:
+        return x
+    x_ = x[:]
+    i = np.random.randint(n-1)
+    x_[i],x_[i+1] = x_[i+1], x_[i]
+    return x_
+
+def remove_insert(x):
+    x = list(x)
+    n = len(x)
+    if n <= 1:
+        return x
+    x_ = x[:]
+    i = np.random.randint(n-1)
+    x_ = x_[:i] + x_[i+1:]
+    x_ += [x_[i]]
+    return x_
+
 
 #Whole neighbors with search strategy
 def insert_one_whole(x, f_x, fitness, search_strat = "first"):
@@ -146,6 +167,7 @@ def insert_three_whole(x, f_x, fitness, search_strat = "first"):
             else: candidate_tmp = tmp1[:j] + tmp + tmp1[j:]
             candidate_tmp_f = fitness(candidate_tmp) 
             if  candidate_tmp_f < best:
+                
                 permute_candidate = candidate_tmp
                 best = candidate_tmp_f    
                 if search_strat == 'first':
@@ -153,4 +175,44 @@ def insert_three_whole(x, f_x, fitness, search_strat = "first"):
     return permute_candidate,best
 
 
+def move_up_whole(x, f_x, fitness, search_strat = "first", valid = None):
+    x = list(x)
+    n = len(x)
+    if n <= 1:
+        return x,f_x
+    permute_candidate = x
+    best = f_x
+    for i in range(n-1):
+        x_ = x[:]
+        x_[i],x_[i+1] = x_[i+1],x_[i]
+        tmp_f = fitness(x_) 
+        if tmp_f < best:
+            if valid and not valid(x):
+                continue
+            permute_candidate = x_
+            best = tmp_f
+            if search_strat == "first":
+                return permute_candidate,best
+    return permute_candidate, best 
 
+def remove_insert_whole(x, f_x, fitness, search_strat = "first", valid = None):
+    x = list(x)
+    n = len(x)
+    if n <= 1:
+        return x,f_x
+    permute_candidate = x
+    best = f_x
+    for i in range(n-1):
+        x_ = x[:]
+        target = x[i]
+        x_ = x[:i] + x[i+1:]
+        x_ += [target]
+        tmp_f = fitness(x_) 
+        if tmp_f < best:
+            if valid and not valid(x):
+                continue
+            permute_candidate = x_
+            best = tmp_f
+            if search_strat == "first":
+                return permute_candidate,best
+    return permute_candidate, best 
